@@ -1,0 +1,4 @@
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Client\wwwroot\appsettings.json
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Client\wwwroot\appsettings.Development.json
+wwwroot\appsettings.Development.json
+wwwroot\appsettings.json

@@ -1,0 +1,36 @@
+﻿@rendermode InteractiveServer
+
+<MudAppBar Elevation="1" Color="Color.Tertiary">
+    <MudIconButton Icon="@Icons.Material.TwoTone.Menu"
+                   Color="Color.Inherit"
+                   OnClick="MudarStatusMenu" />
+</MudAppBar>
+
+<MudDrawer @bind-Open="@_menuAberto" 
+        Anchor="Anchor.Start" 
+        Elevation="1" 
+        Variant="@DrawerVariant.Temporary" 
+        OverlayAutoClose="true">
+    <MudDrawerHeader >
+        <MudText Typo="Typo.h6">Minhas Tarefas</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="@Icons.Material.TwoTone.Close"
+                       Size="Size.Small"
+                       Color="Color.Inherit"
+                       OnClick="_ => _menuAberto = false" />
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudNavLink Match="NavLinkMatch.All" Href="/">Principal</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="/tarefas">Tarefas</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    private bool _menuAberto = false;
+
+    private void MudarStatusMenu()
+    {
+        _menuAberto = !_menuAberto;
+        Console.WriteLine("mudou: " + _menuAberto);
+    }
+}

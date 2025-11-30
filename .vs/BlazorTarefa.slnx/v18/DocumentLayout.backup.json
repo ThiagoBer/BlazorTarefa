@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\remoto\\source\\repos\\BlazorTarefa\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D39E5910-6EE7-D246-0D6A-E3117A79130E}|BlazorTarefa\\BlazorTarefa.Client\\BlazorTarefa.Client.csproj|c:\\users\\remoto\\source\\repos\\blazortarefa\\blazortarefa\\blazortarefa.client\\pages\\tarefas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D39E5910-6EE7-D246-0D6A-E3117A79130E}|BlazorTarefa\\BlazorTarefa.Client\\BlazorTarefa.Client.csproj|solutionrelative:blazortarefa\\blazortarefa.client\\pages\\tarefas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Tarefas.razor",
+              "DocumentMoniker": "C:\\Users\\remoto\\source\\repos\\BlazorTarefa\\BlazorTarefa\\BlazorTarefa.Client\\Pages\\Tarefas.razor",
+              "RelativeDocumentMoniker": "BlazorTarefa\\BlazorTarefa.Client\\Pages\\Tarefas.razor",
+              "ToolTip": "C:\\Users\\remoto\\source\\repos\\BlazorTarefa\\BlazorTarefa\\BlazorTarefa.Client\\Pages\\Tarefas.razor",
+              "RelativeToolTip": "BlazorTarefa\\BlazorTarefa.Client\\Pages\\Tarefas.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHsAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-23T19:01:53.639Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

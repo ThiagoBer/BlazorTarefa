@@ -1,0 +1,11 @@
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\bin\Debug\net10.0\BlazorTarefa.Shared.deps.json
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\bin\Debug\net10.0\BlazorTarefa.Shared.dll
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\bin\Debug\net10.0\BlazorTarefa.Shared.pdb
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.AssemblyInfoInputs.cache
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.AssemblyInfo.cs
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.csproj.CoreCompileInputs.cache
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.dll
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\refint\BlazorTarefa.Shared.dll
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\BlazorTarefa.Shared.pdb
+C:\Users\remoto\source\repos\BlazorTarefa\BlazorTarefa\BlazorTarefa.Shared\obj\Debug\net10.0\ref\BlazorTarefa.Shared.dll

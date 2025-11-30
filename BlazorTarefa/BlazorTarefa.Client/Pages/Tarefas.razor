@@ -1,0 +1,291 @@
+﻿@page "/tarefas"
+@rendermode InteractiveWebAssembly
+@inject HttpClient Http
+@inject IDialogService DialogService
+
+<PageTitle>Tarefas</PageTitle>
+
+@if (tarefas == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+    <MudText>Carregando...</MudText>
+}
+else
+{
+    <MudContainer Class="d-flex justify-space-around">
+        <MudText Typo="Typo.h2">Tarefas</MudText>
+    </MudContainer>
+
+    <MudTable Items="@tarefas" Hover="true" Dense="true" Class="mb-4">
+        <ColGroup>
+            <col />
+            <col style="width:105px;" />
+            <col style="width:120px;" />
+            <col style="width:175px;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>Descrição</MudTh>
+            <MudTh>Concluído</MudTh>
+            <MudTh>Criado a</MudTh>
+            <MudTh>Ações</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                <MudTextField @bind-Value="context.Descricao"
+                              Variant="Variant.Text"
+                              Adornment="Adornment.None"
+                              Margin="Margin.Dense"
+                              @onfocusout="@(async _ => await SalvarTarefa(context))" 
+                              @onkeyup="@(async e => {
+                                  if (e.Key == "Enter")
+                                  {
+                                      await SalvarTarefa(context);
+                                  }})"/>
+            </MudTd>
+            <MudTd>
+                @if (context.Id != Guid.Empty)
+                {
+                    <MudIconButton Icon="@(context.Concluido? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RadioButtonUnchecked)"
+                                   Color="@(context.Concluido ? Color.Success : Color.Default)"
+                                   Style="cursor: pointer;"
+                                   Onclick="(() => AlterarConcluido(context))" />
+                }
+            </MudTd>
+            <MudTd>
+                @GetRelativeTime(context.CriadoEm)
+            </MudTd>
+            <MudTd>
+                <div class="d-flex gap-1">
+         
+                @if (context.Id != Guid.Empty)
+                    {
+                        <MudButton Color="Color.Error"
+                                   Variant="Variant.Outlined"
+                                   OnClick="(() => ExcluirTarefa(context))"
+                                   Size="Size.Small">
+                            Excluir
+                        </MudButton>
+                        <MudButton Color="Color.Primary"
+                                   Variant="Variant.Outlined"
+                                   OnClick="(() => NovaSubTarefa(context))"
+                                   Size="Size.Small">
+                            + Sub
+                        </MudButton>
+                    }
+                </div>
+                
+            </MudTd>
+        </RowTemplate>
+
+        <ChildRowContent>
+            @if (context.SubTarefas?.Any() == true)
+            {
+                <MudTr>
+                    <td colspan="4">
+                        <MudCard Elevation="0">
+                            <MudCardContent Class="pa-0">
+                                <MudTable Items="@context.SubTarefas" Context="subContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+                                    <ColGroup>
+                                        <col />
+                                        <col style="width:105px;" />
+                                        <col style="width:120px;" />
+                                        <col style="width:175px;" />
+                                    </ColGroup>
+                                    <RowTemplate Context="subContext">
+                                        <MudTd>
+                                            <MudTextField @bind-Value="subContext.Descricao"
+                                                          Style="margin-left: 32px;"
+                                                          Variant="Variant.Text"
+                                                          Adornment="Adornment.None"
+                                                          Margin="Margin.Dense"
+                                                          @onfocusout="@(async _ => await SalvarTarefa(subContext))"
+                                                          @onkeyup="@(async e => {
+                                                              if (e.Key == "Enter")
+                                                              {
+                                                                  await SalvarTarefa(subContext);
+                                                              }})"/>                                                           
+                                        </MudTd>
+                                        <MudTd>
+                                            @if (subContext.Id != Guid.Empty)
+                                            {
+                                                <MudIconButton Icon="@(subContext.Concluido? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RadioButtonUnchecked)"
+                                                               Color="@(subContext.Concluido ? Color.Success : Color.Default)"
+                                                               Style="cursor: pointer;"
+                                                               Onclick="(() => AlterarConcluido(subContext))" />
+                                            }
+                                        </MudTd>
+                                        <MudTd>
+                                            @GetRelativeTime(subContext.CriadoEm)
+                                        </MudTd>
+                                        <MudTd>
+                                            <div class="d-flex gap-1">
+                                                @if (subContext.Id != Guid.Empty)
+                                                {
+                                                    <MudButton Color="Color.Error"
+                                                                Variant="Variant.Outlined"
+                                                                OnClick="(() => ExcluirTarefa(subContext))"
+                                                                Size="Size.Small">
+                                                        Excluir
+                                                    </MudButton>
+                                                }
+                                            </div>
+                                        </MudTd>
+
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudCardContent>
+                        </MudCard>
+                    </td>
+                </MudTr>
+            }
+        </ChildRowContent>
+
+    </MudTable>
+
+    <MudContainer Class="d-flex justify-space-around">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NovaTarefa"> Nova Tarefa </MudButton>
+    </MudContainer>
+}
+
+@code {
+    // PersistentState + tarefas sendo uma propriedade publica + OnInitializadedAsync rodando apenas se for null
+    // Isso impede de rodar o refresh da tela 2 vezes por conta do "prerender" (Recurso .net10)
+    [PersistentState]
+    public List<Tarefa>? tarefas { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (tarefas is null)
+        {
+            var lista = await Http.GetFromJsonAsync<List<Tarefa>>("api/tarefas");
+            if (lista is not null) tarefas = lista;
+        }
+    }
+
+    private void NovaTarefa()
+    {
+        //_novaTarefa = new Tarefa();
+        if (tarefas is null) tarefas = new();
+        tarefas.Add(new Tarefa());
+    }
+
+    private void NovaSubTarefa(Tarefa tarefaPai)
+    {
+        var novaSubTarefa = new Tarefa();
+        novaSubTarefa.IdPai = tarefaPai.Id;
+        tarefaPai.SubTarefas.Add(novaSubTarefa);
+        StateHasChanged();
+    }
+
+    private async Task<Tarefa> IncluirTarefa(Tarefa tarefa)
+    {
+        if (String.IsNullOrEmpty(tarefa.Descricao)) return tarefa;
+        var result = await Http.PostAsJsonAsync("api/tarefas", tarefa);
+        if (result.IsSuccessStatusCode)
+        {
+            if (tarefas is null) tarefas = new();
+            // Se gravou com sucesso, fazer a substituição na Lista para ter o id criado e não precisar atualizar a tela novamente
+            var tarefaCriada = await result.Content.ReadFromJsonAsync<Tarefa>();
+            if (tarefaCriada is null) return tarefa;
+
+            var index = tarefas.FindIndex(t => t.Id == tarefa!.Id);
+            if (index != -1)
+            {
+                tarefas[index] = tarefaCriada;
+                StateHasChanged();
+            }
+            return tarefaCriada;
+        }
+        return tarefa;
+    }
+
+    private async Task SalvarTarefa(Tarefa tarefa)
+    {
+        if (String.IsNullOrEmpty(tarefa.Descricao))
+        {
+            RemoveTarefaLista(tarefa);
+            return;
+        }
+
+        if (tarefa.Id == Guid.Empty)
+        {
+            var novaTarefa = await IncluirTarefa(tarefa);
+            tarefa.Id = novaTarefa.Id;
+        }
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync($"api/tarefas/{tarefa.Id}", tarefa);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar: {ex.Message}");
+        }
+    }
+
+    private async void ExcluirTarefa(Tarefa tarefa)
+    {
+        // Salvar primeiro, caso o usuario tentou excluir assim que criou
+        if (tarefa.Id == Guid.Empty)
+        {
+            return;
+        }
+        var result = await Http.DeleteAsync($"api/tarefas/{tarefa.Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            // Se Excluiu com sucesso, fazer a remoção da Lista para não precisar atualizar a tela novamente
+            RemoveTarefaLista(tarefa);
+        }
+    }
+
+    private void RemoveTarefaLista(Tarefa tarefa)
+    {
+        if (tarefa.IdPai == Guid.Empty || tarefa.IdPai is null)
+        {
+            tarefas?.Remove(tarefa);
+        } else
+        {
+            if (tarefas is not null)
+            {
+                for (int i = tarefas.Count - 1; i >= 0; i--)
+                {
+                    var tarefaPai = tarefas[i];
+                    if (tarefaPai.Id == tarefa.IdPai)
+                    {
+                        tarefas[i].SubTarefas.Remove(tarefa);
+                    }
+                }
+            }
+        }
+        StateHasChanged();
+    }
+
+    // Quando clicar no campo de Concluido, gravar no banco de dados
+    private async void AlterarConcluido(Tarefa tarefa)
+    {
+        tarefa.Concluido = !tarefa.Concluido;
+        await SalvarTarefa(tarefa);
+    }
+
+    // Trocar a Data da Criação para um Criado Em
+    private string GetRelativeTime(DateTimeOffset data)
+    {
+        var now = DateTimeOffset.Now;
+        var diff = now - data;
+
+        if (diff.TotalMinutes < 1)
+            return "agora";
+        if (diff.TotalMinutes < 2)
+            return "1 minuto";
+        if (diff.TotalMinutes < 60)
+            return $"{Math.Floor(diff.TotalMinutes)} minutos";
+        if (diff.TotalHours < 2)
+            return "1 hora";
+        if (diff.TotalHours < 24)
+            return $"{Math.Floor(diff.TotalHours)} horas";
+        if (diff.TotalDays < 2)
+            return "1 dia";
+        return $"{Math.Floor(diff.TotalDays)} dias";
+    }
+}

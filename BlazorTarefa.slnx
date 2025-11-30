@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BlazorTarefa/BlazorTarefa.Client/BlazorTarefa.Client.csproj" />
+  <Project Path="BlazorTarefa/BlazorTarefa.Shared/BlazorTarefa.Shared.csproj" />
+  <Project Path="BlazorTarefa/BlazorTarefa/BlazorTarefa.csproj" />
+</Solution>
